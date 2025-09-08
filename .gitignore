@@ -1,0 +1,8 @@
+# Add folders
+prompts/
+.bmad-core/
+.cursor/
+.github/
+.kiro/
+.claude/
+.vscode/
