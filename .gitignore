@@ -235,6 +235,9 @@ prompts/
 .cursor/
 .kiro/
 .claude/
+.augments/*
+.github/chatmodes/*
+.github/workflows/ci.yml
 .vscode/
 node_modules/*
 .augment/
