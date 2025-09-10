@@ -1,0 +1,18 @@
+{
+  "root": true,
+  "extends": [
+    "next/core-web-vitals"
+  ],
+  "rules": {
+    "no-unused-vars": "off",
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "prefer-const": "error",
+    "no-var": "error",
+    "no-undef": "off"
+  },
+  "env": {
+    "browser": true,
+    "es2022": true,
+    "jest": true
+  }
+}
