@@ -121,6 +121,7 @@ prompts/
 .kiro/
 .claude/
 .vscode/
+node_modules/*
 .augment/
 .gemini/
 .roomodes/
