@@ -18,7 +18,14 @@
     "clean": "turbo clean",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "dev:setup": "./scripts/dev-setup.sh",
+    "dev:reset": "./scripts/dev-reset.sh",
+    "dev:test-services": "./scripts/test-external-services.sh",
+    "promote:staging": "./scripts/promote-to-staging.sh",
+    "promote:production": "./scripts/promote-to-production.sh",
+    "rollback:production": "./scripts/rollback-production.sh",
+    "test:production-readiness": "./scripts/test-production-readiness.sh"
   },
   "devDependencies": {
     "@types/node": "^20.8.0",
