@@ -117,8 +117,13 @@ Thumbs.db
 prompts/
 .bmad-core/
 .cursor/
+.github/
 .kiro/
 .claude/
-.augments/*
-.github/chatmodes/*
-.github/workflows/ci.yml
+.vscode/
+.augment/
+.gemini/
+.roomodes/
+docs/
+web-bundles/
+.roomodes
