@@ -1,17 +1,10 @@
 -- Initialize development database
 -- This script runs when PostgreSQL container starts for the first time
 
--- Create development database if it doesn't exist
-SELECT 'CREATE DATABASE zergoqr_dev'
-WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'zergoqr_dev');
-
--- Create test database for running tests
-SELECT 'CREATE DATABASE zergoqr_test'
-WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'zergoqr_test');
-
--- Create staging database for staging environment testing
-SELECT 'CREATE DATABASE zergoqr_staging'
-WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'zergoqr_staging');
+-- Create additional databases
+CREATE DATABASE zergoqr_dev;
+CREATE DATABASE zergoqr_test;
+CREATE DATABASE zergoqr_staging;
 
 -- Enable UUID extension for all databases
 \c zergoqr;

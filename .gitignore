@@ -128,3 +128,7 @@ node_modules/*
 docs/
 web-bundles/
 .roomodes
+
+# Generated files and directories
+.roo/
+packages/db/src/generated/

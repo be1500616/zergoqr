@@ -1,13 +1,12 @@
 import { PrismaClient } from './generated';
-import { env } from '@zergoqr/config';
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Starting database seeding...');
-  
+
   // Clear existing data in development
-  if (env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development') {
     console.log('🧹 Clearing existing data...');
     await prisma.orderItem.deleteMany();
     await prisma.payment.deleteMany();
