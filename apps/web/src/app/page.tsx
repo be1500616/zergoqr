@@ -6,7 +6,7 @@ export default function HomePage() {
           Welcome to ZERGO QR
         </h1>
         <p className="text-center text-lg mb-4">
-          Restaurant QR Code Ordering System
+          Restaurant QR Code Ordering System - Development Environment Ready! 🚀
         </p>
         <div className="text-center">
           <p className="text-sm text-gray-600">
