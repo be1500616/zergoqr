@@ -1,0 +1,115 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database - matches Neon production setup
+  postgres:
+    image: postgres:15-alpine
+    container_name: zergoqr-postgres
+    environment:
+      POSTGRES_DB: zergoqr
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d zergoqr"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - zergoqr-network
+
+  # Redis - matches Vercel KV production setup
+  redis:
+    image: redis:7-alpine
+    container_name: zergoqr-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - zergoqr-network
+
+  # Next.js Development Server
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: development
+    container_name: zergoqr-web
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/zergoqr
+      - DIRECT_URL=postgresql://postgres:postgres@postgres:5432/zergoqr
+      - KV_URL=redis://redis:6379
+      - KV_REST_API_URL=http://redis:6379
+      - KV_REST_API_TOKEN=dev-token
+      - NEXT_PUBLIC_APP_URL=http://localhost:3000
+      - NEXT_PUBLIC_API_URL=http://localhost:3000/api
+      - NEXTAUTH_SECRET=dev-secret-key-32-chars-minimum
+      - NEXTAUTH_URL=http://localhost:3000
+      - JWT_SECRET=dev-jwt-secret-key
+      # Mock external services for development
+      - TWILIO_ACCOUNT_SID=ACtest123456789
+      - TWILIO_AUTH_TOKEN=test_auth_token
+      - TWILIO_PHONE_NUMBER=+911234567890
+      - RAZORPAY_KEY_ID=rzp_test_123456789
+      - RAZORPAY_KEY_SECRET=test_secret_key
+      - SENTRY_DSN=
+      - LOGTAIL_TOKEN=
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - zergoqr-network
+    command: pnpm dev
+    stdin_open: true
+    tty: true
+
+  # Mock External Services Container
+  mock-services:
+    build:
+      context: ./scripts/mock-services
+      dockerfile: Dockerfile
+    container_name: zergoqr-mocks
+    ports:
+      - "8080:8080"  # Mock Twilio
+      - "8081:8081"  # Mock Razorpay
+      - "8082:8082"  # Mock other services
+    environment:
+      - NODE_ENV=development
+    networks:
+      - zergoqr-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  zergoqr-network:
+    driver: bridge
